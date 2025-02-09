@@ -29,6 +29,13 @@ class EligibilityService {
   _evaluateCondition(value, condition) {
     if (typeof condition === "object" && condition !== null) {
       return Object.entries(condition).every(([operator, expected]) => {
+        const isDate = (val) =>
+          typeof val === "string" && !isNaN(Date.parse(val));
+
+        if (isDate(value) && isDate(expected)) {
+          value = new Date(value);
+          expected = new Date(expected);
+        }
         switch (operator) {
           case "gt":
             return Number(value) > Number(expected);
